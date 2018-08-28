@@ -1,12 +1,12 @@
-<ul>
+<ul class="nav nav-pills flex-column">
     {% if cats %}
         {% for c in cats %}
             {% if c == act_cat %}
-                <li>
-                <strong><a href="{% url 'rango:show_category' c.slug %}">{{ c.name }}</a></strong>
+                <li class="nav-item">
+                <strong><a class="nav-link" href="{% url 'rango:show_category' c.slug %}">{{ c.name }}</a></strong>
                 </li>
             {% else %}
-                <li><a href="{% url 'rango:show_category' c.slug %}">{{ c.name }}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'rango:show_category' c.slug %}">{{ c.name }}</a></li>
             {% endif %}
         {% endfor %}
     {% else %}

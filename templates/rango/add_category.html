@@ -8,17 +8,24 @@
 {% block body_block %}
     <h1>Add a category</h1>
     <div>
-        <form id="category_form" method="post" action="{% url 'rango:add_category' %}">
+        <form role="form" id="category_form" method="post"
+              action="{% url 'rango:add_category' %}">
+            <h2 class="form-signin-heading">Add a Category to
+            <a href="{% url 'rango:index' %}">Home</a></h2>
             {% csrf_token %}
             {% for hidden in form.hidden_fields %}
                 {{ hidden }}
             {% endfor %}
             {% for field in form.visible_fields %}
                 {{ field.errors }}
-                {{ field.help_text }}
-                {{ field }}
+                {{ field.help_text }}<br />
+                {{ field }}<br />
             {% endfor %}
-            <input type="submit" name="submit" value="Create Category" />
+            <br />
+            <button class="btn btn-primary"
+                    type="submit" name="submit">
+                Add Category
+            </button>
         </form>
     </div>
 {% endblock %}
