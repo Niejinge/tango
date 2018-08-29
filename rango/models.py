@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-from django.template.defaultfilters import slugify
-
 
 class Category(models.Model):
     name = models.CharField(max_length=128, unique=True)
@@ -11,7 +9,9 @@ class Category(models.Model):
     slug = models.SlugField(blank=True, unique=True)
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        name_list = self.name.strip().split(' ')
+        name_slug = '-'.join(name_list)
+        self.slug = name_slug
         super(Category, self).save(*args, **kwargs)
 
     class Meta:
@@ -38,4 +38,5 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.username
+
 

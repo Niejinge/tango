@@ -2,11 +2,13 @@ from datetime import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from registration.backends.simple.views import RegistrationView
 
 from rango.models import Category, Page
 from .forms import CategoryForm, PageForm
+from .bing_search import run_query
 
 
 def get_server_side_cookie(request, cookie, default_val=None):
@@ -54,13 +56,23 @@ def show_category(request, category_name_slug):
 
     try:
         category = Category.objects.get(slug=category_name_slug)
-        pages = Page.objects.filter(category=category)
+        pages = Page.objects.filter(category=category).order_by('-views')
 
         context_dict['pages'] = pages
         context_dict['category'] = category
     except Category.DoesNotExist:
         context_dict['pages'] = None
         context_dict['category'] = None
+
+    context_dict['query'] = category.name
+
+    result_list = []
+    if request.method == 'POST':
+        query = request.POST['query'].strip()
+        if query:
+            result_list = run_query(query)
+            context_dict['query'] = query
+    context_dict['result_list'] = result_list
     return render(request, 'rango/category.html', context_dict)
 
 
@@ -112,3 +124,20 @@ class MyRegistrationView(RegistrationView):
 
     def get_success_url(self, user):
         return '/rango/'
+
+
+def track_url(request):
+    page_id = None
+    if request.method == 'GET':
+        if 'page_id' in request.GET:
+            page_id = request.GET['page_id']
+    if page_id:
+        try:
+            page = Page.objects.get(id=page_id)
+            page.views = page.views + 1
+            page.save()
+            return redirect(page.url)
+        except:
+            return HttpResponse("Page id{0} not found".format(page_id))
+    print("No page_id in get string")
+    return redirect(reverse('index'))
