@@ -12,4 +12,10 @@ urlpatterns = [
     url(r'^category/(?P<category_name_slug>[\w\-]+)/add_page/$', views.add_page, name='add_page'),
     url(r'^restricted/', views.restrited, name='restricted'),
     url(r'^goto/$', views.track_url, name='goto'),
+    url(r'^register_profile/$', views.register_profile, name='register_profile'),
+    url(r'^profile/(?P<username>[\w\-]+)/$', views.profile, name='profile'),
+    url(r'^profiles', views.list_profiles, name='list_profiles'),
+    url(r'^like/$', views.like_category, name="like_category"),
+    url(r'^suggest/$', views.suggest_category, name='suggest_category'),
+    url(r'^add/$', views.auto_add_page, name='auto_add_page'),
 ]

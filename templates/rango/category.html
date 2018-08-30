@@ -9,21 +9,29 @@
 {% block body_block %}
     {% if category %}
         <h1>{{ category.name }}</h1>
-        {% if pages %}
-            <ul>
-                {% for page in pages %}
-                    <li><a href="{% url 'rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a>
-                    {% if page.views > 1 %}
-                        ({{ page.views }} views)
-                    {% elif page.views == 1 %}
-                        ({{ page.views }} view)
-                    {% endif %}
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <strong>No pages currently in category.</strong>
+        <div>
+        <strong id="like_count">{{ category.likes }}</strong> people like this category
+        {% if user.is_authenticated %}
+            <button id="likes" data-catid="{{ category.id }}"
+            class="btn btn-primary btn-sm" type="button">
+                Like
+            </button>
         {% endif %}
+        </div>
+
+        <div id="pages">
+            {% if pages %}
+                <ul>
+                    {% for page in pages %}
+                        <li><a href="{% url 'rango:goto' %}?page_id={{ page.id }}">{{ page.title }}</a>
+                        <span class="btn btn-info btn-sm">{{ page.views }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <strong>No pages currently in category.</strong>
+            {% endif %}
+        </div>
         {% if user.is_authenticated %}
             <a href="{% url 'rango:add_page' category.slug %}">Add Page</a> <br />
         {% endif %}
@@ -54,6 +62,11 @@
                                     <a href="{{  result.link }}">{{ result.title }}</a>
                                 </h4>
                                 <p class="list-group-item-text">{{ result.summary }}</p>
+                                {% if user.is_authenticated %}
+                                    <button data-catid="{{ category.id }}" data-title="{{ result.title }}"
+                                            data-url="{{ result.link }}"
+                                            class="rango-add btn btn-info btn-sm" type="button">Add</button>
+                                {% endif %}
                             </div>
                         {% endfor %}
                     </div>
