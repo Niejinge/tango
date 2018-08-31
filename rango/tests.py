@@ -31,8 +31,6 @@ class IndexViewTests(TestCase):
         self.assertEqual(num_cats, 4)
 
 
-
-
 def add_cat(name, views, likes):
     c = Category.objects.get_or_create(name=name)[0]
     c.views = views
