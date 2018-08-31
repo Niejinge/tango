@@ -9,6 +9,10 @@ class Category(models.Model):
     slug = models.SlugField(blank=True, unique=True)
 
     def save(self, *args, **kwargs):
+        if self.views < 0:
+            self.views = 0
+        if self.likes < 0:
+            self.likes = 0
         name_list = self.name.strip().split(' ')
         name_slug = '-'.join(name_list)
         self.slug = name_slug
